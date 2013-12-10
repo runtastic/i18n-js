@@ -50,7 +50,9 @@ module SimplesIdeias
 
     def segments_per_locale(pattern,scope)
       ::I18n.available_locales.each_with_object({}) do |locale,segments|
-        result = scoped_translations("#{locale}.#{scope}")
+        locale_scopes = [scope].flatten.map{ |s| "#{locale}.#{s}" }
+        result = scoped_translations(locale_scopes)
+
         unless result.empty?
           segment_name = ::I18n.interpolate(pattern,{:locale => locale})
           segments[segment_name] = result
