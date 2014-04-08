@@ -185,7 +185,7 @@ module SimplesIdeias
     def merge_with_fallback!(result,locale,scope,fallback)
       fallback_locale = fallback_locale(fallback)
       fallback_scopes = scopes_with_locale(scope, fallback_locale)
-      fallback_result = scoped_translations(locale_scopes)
+      fallback_result = scoped_translations(fallback_scopes)
       result[locale] ||= {}
       result[locale] = deep_merge(fallback_result[fallback_locale], result[locale])
     end
