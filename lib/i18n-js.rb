@@ -50,7 +50,7 @@ module SimplesIdeias
 
     def segments_per_locale(pattern,scope,fallback)
       ::I18n.available_locales.each_with_object({}) do |locale,segments|
-        locale_scopes = [scope].flatten.map{ |s| "#{locale}.#{s}" }
+        locale_scopes = scopes_with_locale(scope, locale)
         result = scoped_translations(locale_scopes)
 
         merge_with_fallback!(result, locale, scope, fallback) if fallback
@@ -60,6 +60,10 @@ module SimplesIdeias
           segments[segment_name] = result
         end
       end
+    end
+
+    def scopes_with_locale(scope, locale)
+      [scope].flatten.map{ |s| "#{locale}.#{s}" }
     end
 
     def segment_for_scope(scope)
@@ -180,7 +184,8 @@ module SimplesIdeias
     # deep_merge! given result with result for fallback locale
     def merge_with_fallback!(result,locale,scope,fallback)
       fallback_locale = fallback_locale(fallback)
-      fallback_result = scoped_translations("#{fallback_locale}.#{scope}")
+      fallback_scopes = scopes_with_locale(scope, fallback_locale)
+      fallback_result = scoped_translations(locale_scopes)
       result[locale] ||= {}
       result[locale] = deep_merge(fallback_result[fallback_locale], result[locale])
     end
